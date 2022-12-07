@@ -1,0 +1,97 @@
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+class Rational {
+    int numerator = 0;
+    int denominator = 1;
+public:
+
+    Rational() {}
+    Rational(int num) : numerator(num) {}
+    Rational(int num, int denom) : numerator(num), denominator(denom) {
+        int i = 1;
+        int divisor = 1;
+        while (i != numerator+1 && i != denominator+1) {
+            if (numerator % i == 0 && denominator % i == 0) {
+                divisor = i;
+            }
+            i++;
+        }
+        numerator = numerator / divisor;
+        denominator = denominator / divisor;
+    }
+
+    int GetNumerator() const { return numerator; }
+    int GetDenominator() const { return denominator; }
+
+    void SetNumerator(int num) { numerator = num; }
+    void SetDenominator(int denom) { denominator = denom; }
+
+    Rational Add(Rational _r) {
+        Rational AddVal;
+        AddVal.numerator = numerator * _r.denominator + _r.numerator * denominator;
+        AddVal.denominator = denominator * _r.denominator;
+
+        return AddVal;
+    }
+
+    bool Equal(Rational _r) {
+        bool isEqual = true;
+        if (numerator == _r.numerator && denominator == _r.denominator) {
+            return isEqual;
+        }
+        else {
+            return !isEqual;
+        }
+    }
+
+};
+
+void Print(const Rational& _r) {
+    cout << _r.GetNumerator() << "/" << _r.GetDenominator() << '\n';
+}
+
+void Print(const vector<Rational>& _vec) {
+    for (int i = 0; i < _vec.size(); i++) {
+        Print(_vec[i]);
+    }
+}
+
+Rational Mul(Rational _r1, Rational _r2) {
+    Rational result;
+    result.SetNumerator(_r1.GetNumerator() * _r2.GetNumerator());
+    result.SetDenominator(_r1.GetDenominator() * _r2.GetDenominator());
+
+    return result;
+}
+
+string NewString(string _str) {
+    string AddString;
+    AddString = "***" + _str + "***";
+
+    return AddString;
+}
+
+int main() {
+    Rational r1, r2(5), r3(2, 8), r4;
+    Print(r1); // prints 0/1
+    Print(r2); // prints 5/1
+    Print(r3); // prints 1/4
+
+    r4 = Mul(r2, r3); // r4 = r2*r3
+    Print(r4); // prints 5/4
+    r4 = r2.Add(r3); // r4 = r2+r3
+    Print(r4); // prints 21/4
+
+    if (r4.Equal(Rational{ 42, 8 })) std::cout << "Equal" << std::endl;
+
+    std::vector<Rational> v1;
+    v1.push_back({ 1 }); v1.push_back({ 3, 7 });
+    Print(v1); // prints 1/1, 3/7
+
+    std::string s1 = "C++ programming", s2;
+    s2 = NewString(s1); // s2: "***C++ programming***"
+    std::cout << s2 << std::endl; // prints ***C++ programming***
+}
